@@ -17,5 +17,14 @@ func main() {
 	fmt.Println(final.Sub(start).Seconds(), "seconds")
 	fmt.Println(b -a )
 
-	fmt.Println(time.Now())
+
+	timeStr := time.Now().Format("2006-01-02")
+	fmt.Println("timeStr:", timeStr)
+	t, _ := time.Parse("2006-01-02", timeStr)
+	timeNumber := t.Unix()
+	fmt.Println("timeNumber:", timeNumber)
+
+
+
+
 }

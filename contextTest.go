@@ -39,29 +39,63 @@ func AddCtx(ctx context.Context, a, b int) int {
 }
 
 func main() {
-	{
-		// 使用开放的 API 计算 a+b
-		a := 1
-		b := 2
-		timeout := 1 * time.Second
-		ctx, _ := context.WithTimeout(context.Background(), timeout)
-		res := AddCtx(ctx, 1, 2)
+	//{
+	//	// 使用开放的 API 计算 a+b
+	//	a :=
+	//	b := 2
+	//	var res int
+	//	timeout := 1 * time.Second
+	//	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	//	go func() {
+	//		res = AddCtx(ctx, 1, 2)
+	//	}()
+	//	select {
+	//	case <- ctx.Done():fmt.Println(ctx.Err())
+	//	}
+	//
+	//	fmt.Printf("Compute: %d+%d, result: %d\n", a, b, res)
+	//}
+	//{
+	//	// 手动取消
+	//	a := 1
+	//	b := 2
+	//	ctx, cancel := context.WithCancel(context.Background())
+	//	go func() {
+	//		time.Sleep(4 * time.Second)
+	//		cancel() // 在调用处主动取消
+	//	}()
+	//	res := AddCtx(ctx, 1, 2)
+	//	fmt.Printf("Compute: %d+%d, result: %d\n", a, b, res)
+	//}
+
+
+		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+
+		testContext(ctx)
+
 		select {
-		case <- ctx.Done():fmt.Println(ctx.Err())
+		case <- ctx.Done():
+			cancel()
+
+			fmt.Println("timeout,",ctx.Err())
+
 		}
 
-		fmt.Printf("Compute: %d+%d, result: %d\n", a, b, res)
-	}
-	{
-		// 手动取消
-		a := 1
-		b := 2
-		ctx, cancel := context.WithCancel(context.Background())
-		go func() {
-			time.Sleep(4 * time.Second)
-			cancel() // 在调用处主动取消
-		}()
-		res := AddCtx(ctx, 1, 2)
-		fmt.Printf("Compute: %d+%d, result: %d\n", a, b, res)
-	}
+
+}
+
+func testContext(ctx context.Context){
+	fmt.Println("####")
+	go func(ctx context.Context) {
+		//defer func() {
+		//
+		//	fmt.Println("********")
+		//}()
+		select {
+		case <- ctx.Done():
+			defer 				fmt.Println("defer,",)
+
+		}
+		time.Sleep(3*time.Second)
+	}(ctx)
 }
